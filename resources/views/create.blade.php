@@ -108,45 +108,46 @@
               </div>
             </div>
 
-            <div class="col-md-4">
-              <label class="form-label">Aadhaar Image</label>
-              @if (!empty($user->aadhaar_card))
-                <div class="mb-2">
-                  <img src="{{ $user->getImageUrl($user->aadhaar_card) }}" alt="Aadhaar Image" class="img-thumbnail" width="150">
-                </div>
-              @endif
-              <input type="file" class="form-control" name="aadhaar_card">
-              @error('aadhaar_card')
-                <small class="text-danger">{{ $message }}</small>
-              @enderror
-            </div>
-            
-            <div class="col-md-4">
-              <label class="form-label">PAN Image</label>
-              @if (!empty($user->pan_card))
-                <div class="mb-2">
-                  <img src="{{ $user->getImageUrl($user->pan_card) }}" alt="PAN Image" class="img-thumbnail" width="150">
-                </div>
-              @endif
-              <input type="file" class="form-control" name="pan_card">
-              @error('pan_card')
-                <small class="text-danger">{{ $message }}</small>
-              @enderror
-            </div>
-            
-            <div class="col-md-4">
-              <label class="form-label">Profile Photo</label>
-              @if (!empty($user->profile_photo))
-                <div class="mb-2">
-                  <img src="{{ $user->getImageUrl($user->profile_photo) }}" alt="Profile Photo" class="img-thumbnail" width="150">
-                </div>
-              @endif
-              <input type="file" class="form-control" name="profile_photo">
-              @error('profile_photo')
-                <small class="text-danger">{{ $message }}</small>
-              @enderror
-            </div>
-            
+            <div class="row">
+              {{-- Aadhaar Card --}}
+              <div class="col-md-4">
+                  <label class="form-label">Aadhaar Image</label>
+                  <input type="file" class="form-control" name="aadhaar_card" id="aadhaar_card_input">
+                  <div class="mt-2">
+                      <img id="aadhaar_card_preview" 
+                           src="{{ $user->aadhaar_card ? $user->getImageUrl($user->aadhaar_card) : '#' }}" 
+                           alt="Aadhaar Preview" 
+                           class="img-thumbnail" 
+                           style="max-width: 150px; {{ $user->aadhaar_card ? '' : 'display:none;' }}">
+                  </div>
+              </div>
+          
+              {{-- PAN Card --}}
+              <div class="col-md-4">
+                  <label class="form-label">PAN Image</label>
+                  <input type="file" class="form-control" name="pan_card" id="pan_card_input">
+                  <div class="mt-2">
+                      <img id="pan_card_preview" 
+                           src="{{ $user->pan_card ? $user->getImageUrl($user->pan_card) : '#' }}" 
+                           alt="PAN Preview" 
+                           class="img-thumbnail" 
+                           style="max-width: 150px; {{ $user->pan_card ? '' : 'display:none;' }}">
+                  </div>
+              </div>
+          
+              {{-- Profile Photo --}}
+              <div class="col-md-4">
+                  <label class="form-label">Profile Photo</label>
+                  <input type="file" class="form-control" name="profile_photo" id="profile_photo_input">
+                  <div class="mt-2">
+                      <img id="profile_photo_preview" 
+                           src="{{ $user->profile_photo ? $user->getImageUrl($user->profile_photo) : '#' }}" 
+                           alt="Profile Preview" 
+                           class="img-thumbnail" 
+                           style="max-width: 150px; {{ $user->profile_photo ? '' : 'display:none;' }}">
+                  </div>
+              </div>
+          </div>
     
             <div class="col-12 text-end">
               <button type="submit" class="btn btn-primary px-4">Save</button>
@@ -163,6 +164,27 @@
           </form>
         </div>
       </div>
-      
+      <script>
+        function previewImage(inputId, previewId) {
+            const input = document.getElementById(inputId);
+            const preview = document.getElementById(previewId);
+        
+            input.addEventListener('change', function () {
+                const file = this.files[0];
+                if (file) {
+                    preview.src = URL.createObjectURL(file);
+                    preview.style.display = 'block';
+                } else {
+                    preview.style.display = 'none';
+                }
+            });
+        }
+        
+        // Call for each input
+        previewImage('aadhaar_card_input', 'aadhaar_card_preview');
+        previewImage('pan_card_input', 'pan_card_preview');
+        previewImage('profile_photo_input', 'profile_photo_preview');
+        </script>
+        
 
     @endsection
